@@ -1,0 +1,19 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+
+public class playerspawn : MonoBehaviourPunCallbacks
+{
+    public GameObject Player;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        int spawnrange = Random.Range(0, 25);
+        PhotonNetwork.Instantiate(Player.name, new Vector3(spawnrange, 2, spawnrange), Quaternion.identity);
+    }
+
+
+}

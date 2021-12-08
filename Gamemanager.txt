@@ -1,0 +1,77 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+
+public class gameManager1 : MonoBehaviourPunCallbacks
+{
+    public GameObject panelI;
+    public GameObject panelC;
+    public GameObject panelJ;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        panelI.SetActive(true);
+        panelC.SetActive(false);
+        panelJ.SetActive(false);
+    }
+
+    public override void OnConnected()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+            Debug.Log("working 1");
+        }
+    }
+
+    public void connectToPhotonServer()
+    {
+        if (!PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.ConnectUsingSettings();
+            panelC.SetActive(true);
+            panelI.SetActive(false);
+        }
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log(PhotonNetwork.NickName + " is connected");
+        panelJ.SetActive(true);
+        panelC.SetActive(false);
+    }
+
+    public void joinedRoom()
+    {
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    public void createOrJoinRoom()
+    {
+        string Room = "Room : " + Random.Range(0, 1000);
+
+        RoomOptions ropts = new RoomOptions();
+        ropts.IsOpen = true;
+        ropts.IsVisible = true;
+        ropts.MaxPlayers = 20;
+        PhotonNetwork.CreateRoom(Room, ropts);
+
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        //base.OnJoinRandomFailed(returnCode, message);
+
+        createOrJoinRoom();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel(1);
+    }
+
+
+}
